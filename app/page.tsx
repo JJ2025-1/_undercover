@@ -2,7 +2,30 @@
 import {useState} from "react";
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
+  const [message, setMessage] = useState("");
+  const [extractedText, setExtractedText] = useState(""); 
+  const [lesson, setLesson] = useState("");
+  async function uploadFile() {
+  if (!file) {
+    setMessage("Please select a file first.");
+    return;
+  }
 
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch("http://127.0.0.1:8000/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+
+setMessage(`Extracted ${data.text.length} characters from ${data.filename}`);
+setExtractedText(data.text);
+setLesson(data.lesson);
+  setMessage(`Uploaded: ${data.filename}`);
+}
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
       {/* Header */}
@@ -59,7 +82,36 @@ export default function Home() {
       }
     }}
   />
-</label>
+</label>  
+<button
+  onClick={uploadFile}
+  className="mt-4 rounded-lg bg-blue-500 px-6 py-3 font-semibold hover:bg-blue-600"
+>
+  Upload
+</button>
+{message && (
+  <p className="mt-4 text-sm text-green-400">
+    {message}
+  </p>
+)}
+{extractedText && (
+  <div className="mt-6 max-h-96 overflow-y-auto rounded-lg bg-zinc-800 p-4 text-left">
+    <p className="whitespace-pre-wrap text-sm text-zinc-300">
+      {extractedText}
+    </p>
+  </div>
+)}
+{lesson && (
+  <div className="mt-6 rounded-lg bg-zinc-800 p-6 text-left">
+    <h3 className="mb-4 text-xl font-bold text-white">
+      🎓 AI-Generated Lesson
+    </h3>
+
+    <p className="whitespace-pre-wrap text-zinc-300">
+      {lesson}
+    </p>
+  </div>
+)}
       {file && (
   <p className="mt-4 text-sm text-green-400">
     Selected: {file.name}
