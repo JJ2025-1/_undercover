@@ -1,3 +1,4 @@
+import json
 from google import genai
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,27 +27,55 @@ async def upload_file(file: UploadFile = File(...)):
 
     for page in document:
         text += page.get_text()
-        response = client.models.generate_content(
-    model="gemini-3.6-flash",
-    contents=f"""
+
+    response = client.models.generate_content(
+        model="gemini-3.6-flash",
+        contents=f"""
 You are an AI tutor.
 
-Analyze the following study material and create a beginner-friendly lesson.
+Analyze the study material and return a beginner-friendly lesson.
 
-Include:
-1. Topic
-2. Simple explanation
-3. Important concepts
-4. Example
-5. 3 quiz questions
+Return ONLY valid JSON.
+
+Use exactly this structure:
+
+{{
+    "title": "Lesson title",
+    "summary": "Simple explanation of the topic",
+    "concepts": [
+        "Important concept 1",
+        "Important concept 2"
+    ],
+    "examples": [
+        "Example 1",
+        "Example 2"
+    ],
+    "quiz": [
+        {{
+            "question": "Question text",
+            "options": [
+                "Option A",
+                "Option B",
+                "Option C",
+                "Option D"
+            ],
+            "answer": "Correct option"
+        }}
+    ]
+}}
+
+Do not use Markdown.
+Do not use code fences.
+Do not add any text outside the JSON.
 
 Study material:
 {text}
 """
-)
+    )
+
     return {
-    "filename": file.filename,
-    "pages": len(document),
-    "text": text,
-    "lesson": response.text
-}
+        "filename": file.filename,
+        "pages": len(document),
+        "text": text,
+        "lesson": json.loads(response.text)
+    }
