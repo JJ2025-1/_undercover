@@ -5,7 +5,7 @@ export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState("");
   const [extractedText, setExtractedText] = useState(""); 
-  const [lesson, setLesson] = useState("");
+  const [lesson, setLesson] = useState<any>(null);
   async function uploadFile() {
   if (!file) {
     setMessage("Please select a file first.");
@@ -111,15 +111,48 @@ setLesson(data.lesson);
         </div>
         {lesson && (
   <section className="mt-10 w-full max-w-5xl rounded-2xl border border-zinc-800 bg-zinc-900 p-8 text-left">
-    <h3 className="mb-4 text-xl font-bold text-white">
-      🎓 AI-Generated Lesson
+    
+    <h3 className="text-3xl font-bold text-white">
+      {lesson.title}
     </h3>
 
-   <div className="max-w-none space-y-4 text-zinc-300 leading-7">
-  <ReactMarkdown>
-    {lesson}
-  </ReactMarkdown>
-</div>
+    <p className="mt-4 text-lg text-zinc-300">
+      {lesson.summary}
+    </p>
+
+    <div className="mt-8">
+      <h4 className="text-xl font-semibold text-white">
+        Important Concepts
+      </h4>
+
+      <ul className="mt-4 space-y-3">
+        {lesson.concepts.map((concept: string, index: number) => (
+          <li
+            key={index}
+            className="rounded-lg bg-zinc-800 p-4 text-zinc-300"
+          >
+            {concept}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div className="mt-8">
+      <h4 className="text-xl font-semibold text-white">
+        Examples
+      </h4>
+
+      <div className="mt-4 space-y-3">
+        {lesson.examples.map((example: string, index: number) => (
+          <div
+            key={index}
+            className="rounded-lg border border-zinc-700 p-4 text-zinc-300"
+          >
+            {example}
+          </div>
+        ))}
+      </div>
+    </div>
 
   </section>
 )}
