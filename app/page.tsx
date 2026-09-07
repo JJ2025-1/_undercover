@@ -1,5 +1,6 @@
 "use client";
-import {useState} from "react";
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState("");
@@ -38,7 +39,7 @@ setLesson(data.lesson);
       </header>
 
       {/* Hero */}
-      <section className="mx-auto flex min-h-[80vh] max-w-4xl flex-col items-center justify-center px-6 text-center">
+      <section className="mx-auto flex min-h-[80vh] max-w-6xl flex-col items-center justify-center px-6 text-center">
         <p className="mb-4 text-sm font-medium text-blue-400">
           AI-POWERED LEARNING
         </p>
@@ -56,8 +57,8 @@ setLesson(data.lesson);
         </p>
 
         {/* Upload area */}
-        <div className="mt-10 w-full max-w-xl rounded-2xl border border-dashed border-zinc-700 bg-zinc-900 p-10">
-          <div className="text-4xl">📄</div>
+        <div className="mt-10 w-full max-w-6xl rounded-2xl border border-dashed border-zinc-700 bg-zinc-900 p-10">
+          <div className="text-6xl">📄</div>
 
           <h3 className="mt-4 text-xl font-semibold">
             Upload your study material
@@ -94,30 +95,34 @@ setLesson(data.lesson);
     {message}
   </p>
 )}
-{extractedText && (
+{/* {extractedText && (
   <div className="mt-6 max-h-96 overflow-y-auto rounded-lg bg-zinc-800 p-4 text-left">
     <p className="whitespace-pre-wrap text-sm text-zinc-300">
       {extractedText}
     </p>
   </div>
-)}
-{lesson && (
-  <div className="mt-6 rounded-lg bg-zinc-800 p-6 text-left">
-    <h3 className="mb-4 text-xl font-bold text-white">
-      🎓 AI-Generated Lesson
-    </h3>
+)} */}
 
-    <p className="whitespace-pre-wrap text-zinc-300">
-      {lesson}
-    </p>
-  </div>
-)}
       {file && (
   <p className="mt-4 text-sm text-green-400">
     Selected: {file.name}
   </p>
 )}
         </div>
+        {lesson && (
+  <section className="mt-10 w-full max-w-5xl rounded-2xl border border-zinc-800 bg-zinc-900 p-8 text-left">
+    <h3 className="mb-4 text-xl font-bold text-white">
+      🎓 AI-Generated Lesson
+    </h3>
+
+   <div className="max-w-none space-y-4 text-zinc-300 leading-7">
+  <ReactMarkdown>
+    {lesson}
+  </ReactMarkdown>
+</div>
+
+  </section>
+)}
 
         <p className="mt-4 text-xs text-zinc-600">
           Your material will be analyzed and converted into a lesson.
